@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "git-pal"
+version = "1.0.0"
+description = "A Textual TUI assistant for complex git operations."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "GitPal Engineering", email = "dev@gitpal.example.com" }]
+keywords = ["git", "tui", "textual", "rebase", "devtools"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Environment :: Console",
+  "Topic :: Software Development :: Version Control :: Git",
+  "Topic :: Terminals",
+]
+
+dependencies = [
+  "textual>=0.50.0",
+  "cryptography>=42.0",
+  "pyjwt[crypto]>=2.8.0",
+  "pydantic>=2.0",
+  "tomli; python_version < '3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.example.com/git-pal/git-pal"
+Repository = "https://github.example.com/git-pal/git-pal"
+Documentation = "https://github.example.com/git-pal/git-pal/blob/main/README.md"
+
+[project.scripts]
+git-pal = "git_pal.cli:main"
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23.0",
+  "pyfakefs>=5.0.0",
+  "ruff>=0.6.0",
+  "coverage>=7.6.0",
+]
+build = ["build", "twine"]
