@@ -1,0 +1,21 @@
+Thank you for purchasing Git-Pal Pro!
+
+Your license bundle is attached to this email as a ZIP file.
+
+Inside you'll find:
+- git_pal-1.0.0-py3-none-any.whl (the installable package)
+- config.toml (your pre-configured license file)
+- QUICKSTART.txt (installation instructions)
+- PURCHASE.json (purchase record)
+
+Quick Start:
+1. pip install git_pal-1.0.0-py3-none-any.whl
+2. Copy config.toml to ~/.config/git-pal/ (Linux/macOS) or %APPDATA%\git-pal\ (Windows)
+3. git config --global sequence.editor "git-pal"
+4. git rebase -i HEAD~5
+
+Privacy: Your license is verified offline. No cloud calls. A local receipt.json is created for anti-leak purposes only.
+
+Support: Reply to this email or open an issue at https://github.com/example/git-pal/issues
+
+Enjoy your Pro TUI!

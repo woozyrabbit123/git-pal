@@ -14,3 +14,4 @@ dist/
 # seller-only assets
 licensor_keys/
 buyer_builds/
+token.txt
