@@ -1,7 +1,5 @@
 import pytest
-from pathlib import Path
-from textual.widgets import DataTable, Button
-from textual.widgets._input import Input
+from textual.widgets import DataTable
 
 from git_pal.tui.app import GitPalApp
 from git_pal.rebase.parser import parse_todo_file, write_todo_file

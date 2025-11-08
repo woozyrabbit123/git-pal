@@ -1,6 +1,5 @@
 import time
 import jwt
-from pathlib import Path
 
 from git_pal import config as config_mod
 from git_pal.licensing import verify_license, EXPECTED_ISSUER
