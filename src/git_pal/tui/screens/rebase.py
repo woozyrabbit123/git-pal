@@ -10,13 +10,14 @@ from git_pal.tui.screens.modals import EditActionModal
 class RebaseScreen(Screen[List[RebaseAction]]):
     BINDINGS = []
 
-    def __init__(self, initial_actions: List[RebaseAction]):
+    def __init__(self, initial_actions: List[RebaseAction], features: list[str] | None = None):
         super().__init__()
         self.initial_actions = initial_actions
         self.actions: List[RebaseAction] = [RebaseAction(a.command, a.commit_hash, a.message) for a in initial_actions]
+        self.features = set(features or [])
 
     def compose(self) -> ComposeResult:
-        yield Header(show_clock=False)
+        yield Header(show_clock=False, name=f"git-pal Rebase Editor [{'PRO' if 'pro' in self.features else 'DEMO'}]")
         yield Vertical(
             DataTable(id="rebase-table", cursor_type="row"),
             Horizontal(
@@ -39,6 +40,9 @@ class RebaseScreen(Screen[List[RebaseAction]]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "save":
+            if "pro" in self.features:
+                # (future hook) compute smart suggestions here
+                pass
             comments = [a for a in self.initial_actions if a.command.startswith("#")]
             final_actions = self.actions + comments
             self.dismiss(final_actions)

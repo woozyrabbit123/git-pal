@@ -10,3 +10,7 @@ build/
 .pytest_cache/
 .coverage
 dist/
+
+# seller-only assets
+licensor_keys/
+buyer_builds/

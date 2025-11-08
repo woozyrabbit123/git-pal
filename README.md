@@ -53,3 +53,9 @@ git rebase -i HEAD~5
 ```
 
 The TUI will open. Arrow keys to navigate; press `e` or Enter to edit; click Save & Exit to write back.
+
+## Commercial Use & Licensing
+
+Git-Pal Pro is licensed per user. The app verifies your RS256 token offline.
+
+**Privacy:** No cloud calls. On first valid run, a local `receipt.json` is written with a purchase ID and non-PII fingerprint (anti-leak breadcrumb).
