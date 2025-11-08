@@ -1,51 +1,46 @@
-import sys
-import traceback
-from pathlib import Path
-from typing import Optional, List
+"""GitPal CLI entry point."""
 
-if sys.version_info < (3, 11):
-    import tomli as tomllib  # noqa: F401
-else:
-    import tomllib  # noqa: F401
+from __future__ import annotations
+import argparse
+import sys
+from pathlib import Path
 
 from git_pal.tui.app import GitPalApp, TUIQuitRequest
 from git_pal.rebase.parser import parse_todo_file, write_todo_file
-from git_pal.rebase.state import RebaseAction  # placeholder type
+from git_pal.rebase.state import RebaseAction
 
-def main() -> None:
-    """
-    Entry point for 'git-pal'. Designed to be called by Git as a GIT_SEQUENCE_EDITOR.
-    """
+def main(argv: list[str] | None = None) -> int:
+    """Entry point for the git-pal CLI."""
+    argv = argv or sys.argv[1:]
+    parser = argparse.ArgumentParser(
+        prog="git-pal",
+        description="Interactive TUI for Git rebase conflict resolution."
+    )
+    parser.add_argument(
+        "todo_file",
+        type=Path,
+        help="Path to the Git rebase todo file provided by Git."
+    )
+    args = parser.parse_args(argv)
+
+    todo_path = args.todo_file
+    if not todo_path.exists():
+        print(f"[git-pal] error: todo file not found at {todo_path}", file=sys.stderr)
+        return 1
+
     try:
-        if len(sys.argv) < 2:
-            print("Error: git-pal is intended to be run by Git as a sequence editor.", file=sys.stderr)
-            print('Usage: git config --global sequence.editor "git-pal"', file=sys.stderr)
-            sys.exit(1)
-
-        todo_file_path = Path(sys.argv[1])
-        if not todo_file_path.is_file():
-            print(f"Error: Todo file not found at {todo_file_path}", file=sys.stderr)
-            sys.exit(1)
-
-        initial_actions: List[RebaseAction] = parse_todo_file(todo_file_path)
-
-        app = GitPalApp(initial_actions=initial_actions, todo_file_path=todo_file_path)
-        final_actions: Optional[List[RebaseAction]] = app.run()
-
-        if final_actions is not None:
-            write_todo_file(todo_file_path, final_actions)
-            sys.exit(0)
-
-        print("Rebase aborted by user.", file=sys.stderr)
-        sys.exit(1)
-
+        actions: list[RebaseAction] = parse_todo_file(todo_path)
+        app = GitPalApp(actions)
+        app.run()
+        write_todo_file(todo_path, actions)
+        return 0
     except TUIQuitRequest:
-        print("Rebase aborted by user.", file=sys.stderr)
-        sys.exit(1)
-    except Exception:
-        print("Error running git-pal TUI:", file=sys.stderr)
-        print(traceback.format_exc(), file=sys.stderr)
-        sys.exit(1)
+        print("[git-pal] user exited TUI.")
+        return 0
+    except Exception as e:
+        print(f"[git-pal] fatal error: {e}", file=sys.stderr)
+        return 1
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
