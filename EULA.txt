@@ -1,0 +1,7 @@
+Git-Pal End-User License Agreement (EULA)
+
+- License: Single-user, non-transferable. You may install on your own machines.
+- No Redistribution: You may not share, resell, or upload the software or license token.
+- Modifications: Local modifications allowed; redistribution of modified binaries prohibited.
+- Warranty: Provided "as is"; liability limited to purchase price.
+- Anti-leak: The app creates a local receipt.json with a purchase ID and non-PII fingerprint.
