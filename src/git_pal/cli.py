@@ -30,13 +30,18 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         actions: list[RebaseAction] = parse_todo_file(todo_path)
-        app = GitPalApp(actions)
-        app.run()
-        write_todo_file(todo_path, actions)
-        return 0
+        app = GitPalApp(initial_actions=actions, todo_file_path=todo_path)
+        final_actions = app.run()
+
+        if final_actions is not None:
+            write_todo_file(todo_path, final_actions)
+            return 0
+        else:
+            print("[git-pal] rebase aborted by user.", file=sys.stderr)
+            return 1
     except TUIQuitRequest:
         print("[git-pal] user exited TUI.")
-        return 0
+        return 1
     except Exception as e:
         print(f"[git-pal] fatal error: {e}", file=sys.stderr)
         return 1
