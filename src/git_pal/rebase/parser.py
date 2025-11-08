@@ -7,6 +7,7 @@ from git_pal.rebase.state import RebaseAction
 COMMIT_LINE_RE = re.compile(
     r"^(?P<command>pick|reword|edit|squash|fixup|drop)\s+(?P<hash>[a-f0-9]+)\s+(?P<message>.*)$"
 )
+MERGE_CMD_RE = re.compile(r"^(merge)\s+([0-9a-f]{4,40})\s+(.+)$")
 OTHER_CMD_RE = re.compile(r"^(?P<command>exec|label|reset|update-ref)\s+(?P<message>.*)$")
 NO_ARG_CMD_RE = re.compile(r"^(?P<command>break|noop)$")
 COMMENT_RE = re.compile(r"^(?P<command>#)(?P<message>.*)$")
@@ -23,6 +24,11 @@ def parse_todo_file(file_path: Path) -> List[RebaseAction]:
                 actions.append(
                     RebaseAction(command=m.group("command"), commit_hash=m.group("hash"), message=m.group("message"))
                 )
+                continue
+            m = MERGE_CMD_RE.match(line)
+            if m:
+                command, commit_hash, message = m.groups()
+                actions.append(RebaseAction(command=command, commit_hash=commit_hash, message=message))
                 continue
             m = OTHER_CMD_RE.match(line)
             if m:

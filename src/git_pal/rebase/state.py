@@ -11,7 +11,7 @@ class RebaseAction:
         self.original_line = self._to_line()
 
     def _to_line(self) -> str:
-        if self.command in ("pick", "reword", "edit", "squash", "fixup", "drop"):
+        if self.command in ("pick", "reword", "edit", "squash", "fixup", "drop", "merge"):
             return f"{self.command} {self.commit_hash} {self.message}".rstrip()
         if self.command in ("label", "reset", "update-ref", "exec"):
             return f"{self.command} {self.message}".rstrip()
