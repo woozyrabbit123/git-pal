@@ -1,4 +1,3 @@
-from pathlib import Path
 import sys
 import textwrap
 from git_pal.config import get_config_path, load_config
@@ -46,7 +45,6 @@ fake
 def test_config_path_linux(monkeypatch):
     """Test that config path is correct on Linux."""
     monkeypatch.setattr(sys, "platform", "linux")
-    from pathlib import Path
     # Reload to pick up platform change
     path = get_config_path()
     assert ".config" in str(path)

@@ -1,6 +1,5 @@
 from pathlib import Path
 from git_pal.rebase.parser import parse_todo_file, write_todo_file
-from git_pal.rebase.state import RebaseAction
 
 GIT_REBASE_TODO_CONTENT = """\
 pick a1b2c3d commit 1
