@@ -36,6 +36,11 @@ def main():
     dist = Path(args.dist_dir)
     out = Path(args.out_dir)
     out.mkdir(exist_ok=True)
+
+    # Fail fast if no wheel found
+    if not list(dist.glob("git_pal-*.whl")):
+        raise SystemExit("❌ No built wheel found in dist/. Run `python -m build` first.")
+
     wheel = sorted(dist.glob("git_pal-*.whl"))[-1]
     tok = Path(args.token_file).read_text().strip()
     pub = Path(args.public_key).read_text()
