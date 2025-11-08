@@ -1,7 +1,6 @@
 """Textual TUI application - placeholder implementation."""
 
-from pathlib import Path
-from typing import List, Optional
+from typing import List
 from git_pal.rebase.state import RebaseAction
 
 
@@ -13,12 +12,11 @@ class TUIQuitRequest(Exception):
 class GitPalApp:
     """Main TUI application - placeholder implementation."""
 
-    def __init__(self, initial_actions: List[RebaseAction], todo_file_path: Path):
+    def __init__(self, actions: List[RebaseAction]):
         """Initialize the TUI app."""
-        self.initial_actions = initial_actions
-        self.todo_file_path = todo_file_path
+        self.actions = actions
 
-    def run(self) -> Optional[List[RebaseAction]]:
+    def run(self) -> None:
         """Run the TUI app - placeholder implementation."""
         # Placeholder implementation
-        return None
+        pass
