@@ -43,8 +43,16 @@ class RebaseScreen(Screen[List[RebaseAction]]):
             if "pro" in self.features:
                 # (future hook) compute smart suggestions here
                 pass
-            comments = [a for a in self.initial_actions if a.command.startswith("#")]
-            final_actions = self.actions + comments
+            # Reconstruct final_actions preserving comment positions from initial_actions
+            # and using edited actions from self.actions
+            final_actions = []
+            for i, initial_action in enumerate(self.initial_actions):
+                if initial_action.command.startswith("#"):
+                    # Preserve original comment at its position
+                    final_actions.append(initial_action)
+                else:
+                    # Use edited action from self.actions at the same index
+                    final_actions.append(self.actions[i])
             self.dismiss(final_actions)
         elif event.button.id == "abort":
             self.dismiss(None)
