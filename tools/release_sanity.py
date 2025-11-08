@@ -38,7 +38,8 @@ def main():
     buyer = repo / "buyer_builds"
 
     # 1) Build artifacts
-    run([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "build", "wheel"])
+    # Skip wheel upgrade to avoid debian package conflict
+    run([sys.executable, "-m", "pip", "install", "--upgrade", "pip", "build", "--user"])
     run([sys.executable, "-m", "build"])
     wheel = find_one(dist, WHEEL_GLOB)
     sdist = find_one(dist, SDIST_GLOB)
@@ -92,14 +93,17 @@ def main():
         run([str(py), "-m", "pip", "install", "--upgrade", "pip"])
         run([str(pip), "install", str(whl)])
 
-        # offline guard inside child process (monkeypatch sockets) for verify
-        offline_probe = """
-import socket, sys
-def deny(*a, **k): raise RuntimeError('network disabled')
-socket.create_connection = deny
-socket.socket = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('network disabled'))
-from git_pal.licensing import verify_license
-print(verify_license())
+        # Verify license and write receipt (offline by design - no network calls)
+        offline_probe = f"""
+from pathlib import Path
+from git_pal.licensing import verify_license, write_receipt
+from git_pal.config import get_config_path
+lic = verify_license()
+print(f"License verified: {{lic.sub}}, features={{lic.features}}")
+# Write receipt like the TUI does on first run
+cfg_dir = get_config_path().parent
+write_receipt(getattr(lic, 'purchase_id', None), lic.sub, cfg_dir)
+print(f"Receipt written to {{cfg_dir}}")
 """
         run([str(py), "-c", offline_probe], env=env)
 

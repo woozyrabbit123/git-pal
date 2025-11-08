@@ -16,8 +16,13 @@ class Config(BaseModel):
     license_token: str = Field(..., description="User's license token (JWT/JWS).")
 
 def get_config_path() -> Path:
+    import os
     if sys.platform == "win32":
         return Path.home() / "AppData" / "Roaming" / "git-pal" / "config.toml"
+    # Respect XDG_CONFIG_HOME on Unix-like systems
+    xdg = os.getenv("XDG_CONFIG_HOME")
+    if xdg:
+        return Path(xdg) / "git-pal" / "config.toml"
     return Path.home() / ".config" / "git-pal" / "config.toml"
 
 @lru_cache(maxsize=1)
